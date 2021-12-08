@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { DetailedHTMLProps, HTMLAttributes } from "react";
 import { Form, Field } from "react-final-form";
 import { useNavigate } from "react-router";
@@ -18,6 +18,8 @@ const styles: Record<
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    flex: 1,
+    height: "100vh",
   },
   field: {
     display: "flex",
@@ -36,6 +38,8 @@ export function Connect() {
   const onSubmit = async ({ roomName }: IFormValues) => {
     const user = localStorage.getItem("userName") ?? "";
     const id = await roomClient.createRoom();
+
+    navigator.clipboard.writeText(id);
 
     if (user) {
       navigate(`/room/${id}?user=${user}&room=${roomName}`);
@@ -63,6 +67,7 @@ export function Connect() {
                 />
               </div>
               <Button
+                fullWidth={true}
                 variant="contained"
                 disabled={invalid}
                 onClick={(e) => {
