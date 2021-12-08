@@ -1,6 +1,6 @@
 import React, { DetailedHTMLProps, HTMLAttributes, useState } from "react";
 import { Form, Field } from "react-final-form";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { TextInput } from "./Components";
 import { useNavigate, useParams } from "react-router";
 import { useSearchParams } from "react-router-dom";
@@ -25,6 +25,7 @@ const styles: Record<
     display: "flex",
     flexDirection: "column",
     marginBottom: 20,
+    width: 400,
   },
 };
 
@@ -58,38 +59,49 @@ export function Join() {
   };
 
   return (
-    <Form onSubmit={onSubmit} initialValues={{ room, name: "" }}>
-      {({ invalid, handleSubmit }) => {
-        return (
-          <form style={styles.form}>
-            <header className="App-header">
-              <h1>Join {room}</h1>
-            </header>
-            <article>
-              <div style={styles.field}>
-                <Field
-                  name="name"
-                  render={({ input }) => (
-                    <TextInput input={input} label="Your Name" required />
-                  )}
-                  validate={required}
-                />
-              </div>
-              <Button
-                fullWidth={true}
-                variant="contained"
-                disabled={invalid}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleSubmit();
-                }}
-              >
-                Connect
-              </Button>
-            </article>
-          </form>
-        );
+    <div
+      className="debug"
+      style={{
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
-    </Form>
+    >
+      <Form onSubmit={onSubmit} initialValues={{ room, name: "" }}>
+        {({ invalid, handleSubmit }) => {
+          return (
+            <form style={styles.form}>
+              <header style={{ marginBottom: "4rem" }}>
+                <Typography variant="h1">Join {room}</Typography>
+              </header>
+              <article>
+                <div style={styles.field}>
+                  <Field
+                    name="name"
+                    render={({ input }) => (
+                      <TextInput input={input} label="Your Name" required />
+                    )}
+                    validate={required}
+                  />
+                </div>
+                <Button
+                  fullWidth={true}
+                  variant="contained"
+                  disabled={invalid}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleSubmit();
+                  }}
+                >
+                  Connect
+                </Button>
+              </article>
+            </form>
+          );
+        }}
+      </Form>
+    </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Button, CircularProgress } from "@mui/material";
+import { Button, CircularProgress, Typography } from "@mui/material";
 import { DetailedHTMLProps, HTMLAttributes } from "react";
 import { Form, Field } from "react-final-form";
 import { useNavigate } from "react-router";
@@ -25,6 +25,7 @@ const styles: Record<
     display: "flex",
     flexDirection: "column",
     marginBottom: 20,
+    width: 400,
   },
 };
 
@@ -55,8 +56,8 @@ export function Connect() {
       {({ invalid, handleSubmit }) => {
         return (
           <form style={styles.form} onSubmit={handleSubmit}>
-            <header className="App-header">
-              <h1>Create a room</h1>
+            <header style={{ marginBottom: "4rem" }}>
+              <Typography variant="h1">Create a room</Typography>
             </header>
             <article>
               <div style={styles.field}>
