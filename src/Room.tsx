@@ -9,6 +9,8 @@ import uniq from "lodash/uniq";
 import mediaClient from "./mediaClient";
 import { Video, Audio } from "./Media";
 import { Chat } from "./Chat";
+import { AppBar, useTheme, Typography } from "@mui/material";
+import { capitalize } from "lodash";
 
 function useLocalStream() {
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
@@ -21,6 +23,8 @@ function useLocalStream() {
 }
 
 export function Room() {
+  const theme = useTheme();
+
   const { roomId } = useParams();
   const [messages, setMessages] = useState<Message[]>([]);
   const [searchParams] = useSearchParams();
@@ -91,57 +95,111 @@ export function Room() {
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>{room}</h1>
-
-        <h2>Connected</h2>
-        <ul>
-          <li>{user}</li>
-          <li>{roomClient._conn?.metadata.name}</li>
-        </ul>
-        <div>
-          {localStream && <Video isRemote={false} stream={localStream} />}
-          {remoteStream && <Video isRemote={true} stream={remoteStream} />}
-          {remoteStream && <Audio stream={remoteStream} />}
-        </div>
-        <ul>
-          {messages.map((message) => {
-            return (
-              <li key={message.id}>
-                <div>{message.text}</div>
-                <div>{message.sentAt}</div>
-              </li>
-            );
-          })}
-        </ul>
-        <Form
-          onSubmit={({ text }) => {
-            const message: Message = {
-              sentAt: new Date().toISOString(),
-              text,
-              id: uuid(),
-              sentBy: user,
-            };
-            roomClient.sendMessage(message);
-            setMessages((ms) => uniq([...ms, message]));
+    <>
+      <div
+        style={{
+          height: "100%",
+          backgroundColor: theme.palette.background.default,
+          width: "100%",
+          // account for static top bar
+          paddingTop: "4.6rem",
+        }}
+      >
+        <AppBar
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "1rem",
           }}
-          render={({ handleSubmit }) => (
-            <form onSubmit={handleSubmit}>
-              <Field name="text" component="input" />
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleSubmit();
-                }}
-              >
-                Send
-              </button>
-            </form>
-          )}
-        />
-        <Chat messages={messages} onSendMessage={onSendMessage} user={user} />
-      </header>
-    </div>
+          color="primary"
+        >
+          <Typography variant="h4" color={"black"}>
+            {capitalize(room || "")}
+          </Typography>
+        </AppBar>
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          {/* LEFT SECTION (user avatars) */}
+          <div style={{ flex: 1 }}>
+            {localStream && <Video isRemote={false} stream={localStream} />}
+            {remoteStream && <Video isRemote={true} stream={remoteStream} />}
+            {remoteStream && <Audio stream={remoteStream} />}
+          </div>
+
+          {/* RIGHT SECTION (canvas) */}
+          <div
+            style={{
+              flex: 3,
+              height: "100%",
+              backgroundColor:
+                theme.palette.secondary.light || theme.palette.background.paper,
+            }}
+          >
+            <Chat
+              messages={messages}
+              onSendMessage={onSendMessage}
+              user={user}
+            />
+          </div>
+        </div>
+      </div>
+    </>
   );
+}
+
+{
+  /* <div className="App">
+<header className="App-header">
+  <h1>{room}</h1>
+  <ul>
+    <li>{user}</li>
+    <li>{roomClient._conn?.metadata.name}</li>
+  </ul>
+  <div>
+    {localStream && <Video isRemote={false} stream={localStream} />}
+    {remoteStream && <Video isRemote={true} stream={remoteStream} />}
+    {remoteStream && <Audio stream={remoteStream} />}
+  </div>
+  <ul>
+    {messages.map((message) => {
+      return (
+        <li key={message.id}>
+          <div>{message.text}</div>
+          <div>{message.sentAt}</div>
+        </li>
+      );
+    })}
+  </ul>
+  <Form
+    onSubmit={({ text }) => {
+      const message: Message = {
+        sentAt: new Date().toISOString(),
+        text,
+        id: uuid(),
+        sentBy: user,
+      };
+      roomClient.sendMessage(message);
+      setMessages((ms) => uniq([...ms, message]));
+    }}
+    render={({ handleSubmit }) => (
+      <form onSubmit={handleSubmit}>
+        <Field name="text" component="input" />
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+        >
+          Send
+        </button>
+      </form>
+    )}
+  />
+</header>
+</div> */
 }
