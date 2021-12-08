@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { Launcher } from "react-chat-window";
 import { Message } from "./roomClient";
 
@@ -33,6 +33,21 @@ const transformChatMessages = (
 };
 
 export function Chat({ messages, onSendMessage, user }: ChatProps) {
+  console.log(messages, "here");
+  const [isOpen, setIsOpen] = useState(false);
+  const [newMessagesCount, setNewMessagesCount] = useState(0);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setNewMessagesCount(newMessagesCount + 1);
+    }
+  }, [messages.length]);
+
+  const onClick = () => {
+    setIsOpen(!isOpen);
+    setNewMessagesCount(0);
+  };
+
   return (
     <div>
       <Launcher
@@ -41,10 +56,16 @@ export function Chat({ messages, onSendMessage, user }: ChatProps) {
           imageUrl:
             "https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png",
         }}
-        onMessageWasSent={(message: MessageList) =>
-          onSendMessage(message.data.text || "")
-        }
-        newMessagesCount={1}
+        onMessageWasSent={(message: MessageList) => {
+          const updatedMessageCount = isOpen
+            ? newMessagesCount
+            : newMessagesCount + 1;
+          setNewMessagesCount(updatedMessageCount);
+          onSendMessage(message.data.text || "");
+        }}
+        newMessagesCount={newMessagesCount}
+        handleClick={onClick}
+        isOpen={isOpen}
         messageList={transformChatMessages(messages, user)}
         showEmoji={false}
       />
