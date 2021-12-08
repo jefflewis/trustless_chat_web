@@ -2,6 +2,7 @@ import { Button, TextField } from "@mui/material";
 import react, { DetailedHTMLProps, HTMLAttributes } from "react";
 import { Form, Field } from "react-final-form";
 import { useNavigate } from "react-router";
+import { TextInput } from "./Components";
 import roomClient from "./roomClient";
 
 interface IFormValues {
@@ -43,6 +44,8 @@ export function Connect() {
     }
   };
 
+  console.log("hello world");
+
   return (
     <Form onSubmit={onSubmit} initialValues={{ room: "", name: "" }}>
       {({ invalid, handleSubmit }) => {
@@ -54,25 +57,33 @@ export function Connect() {
             <article>
               <div style={styles.field}>
                 <label htmlFor="room">Room Name</label>
-                <Field name="room" component={() => (
-                  <TextField id="filled-basic" label="Filled" variant="filled" />
-                )} validate={required} />
-                
-              </div>
-              <div style={styles.field}>
-                <label htmlFor="name">Your Name</label>
                 <Field
-                  name="name"
-                  component={() => (
-                    <TextField id="filled-basic" label="Filled" variant="filled" />
+                  name="room"
+                  render={({ input }) => (
+                    <TextInput input={input} label="Room Name" required />
                   )}
                   validate={required}
                 />
               </div>
-              <Button variant="contained" disabled={invalid} onClick={(e) => {
+              <div style={styles.field}>
+                <Field
+                  name="name"
+                  render={({ input }) => (
+                    <TextInput input={input} label="Your Name" required />
+                  )}
+                  validate={required}
+                />
+              </div>
+              <Button
+                variant="contained"
+                disabled={invalid}
+                onClick={(e) => {
                   e.preventDefault();
                   handleSubmit();
-                }} >Connect</Button>
+                }}
+              >
+                Connect
+              </Button>
             </article>
           </form>
         );
