@@ -8,7 +8,6 @@ function createRoom() {
 
 interface IFormValues {
   name: string;
-  room: string;
 }
 
 const styles: Record<
@@ -35,9 +34,16 @@ function required(val: any) {
 export function Connect() {
   let navigate = useNavigate();
 
-  const onSubmit = ({ name, room }: IFormValues) => {
+  const onSubmit = ({ name }: IFormValues) => {
     const id = createRoom();
-    navigate(`/room/${id}?room=${room}&name=${name}`);
+
+    const userName = localStorage.getItem("userName");
+
+    if (userName) {
+      navigate(`/room/${id}?name=${userName}&room=${name}`);
+    } else {
+      navigate(`/join/${id}?name=${name}`);
+    }
   };
 
   return (
@@ -50,16 +56,8 @@ export function Connect() {
             </header>
             <article>
               <div style={styles.field}>
-                <label htmlFor="room">Room Name</label>
-                <Field name="room" component="input" validate={required} />
-              </div>
-              <div style={styles.field}>
-                <label htmlFor="name">Your Name</label>
-                <Field
-                  name="name"
-                  component="input"
-                  validate={(val) => (val ? undefined : "required")}
-                />
+                <label htmlFor="name">Room Name</label>
+                <Field name="name" component="input" validate={required} />
               </div>
               <button
                 onClick={(e) => {
