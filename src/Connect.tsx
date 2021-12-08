@@ -40,7 +40,7 @@ export function Connect() {
     const id = await roomClient.createRoom();
 
     navigator.clipboard.writeText(
-      `http://localhost:3000/join/${id}?room=${roomName}`
+      encodeURI(`http://localhost:3000/join/${id}?room=${roomName}`)
     );
 
     if (user) {
