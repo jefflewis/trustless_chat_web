@@ -2,14 +2,10 @@ import { Button, TextField } from "@mui/material";
 import react, { DetailedHTMLProps, HTMLAttributes } from "react";
 import { Form, Field } from "react-final-form";
 import { useNavigate } from "react-router";
-
-function createRoom() {
-  return Math.random().toString();
-}
+import roomClient from "./roomClient";
 
 interface IFormValues {
   name: string;
-  room: string;
 }
 
 const styles: Record<
@@ -36,9 +32,15 @@ function required(val: any) {
 export function Connect() {
   let navigate = useNavigate();
 
-  const onSubmit = ({ name, room }: IFormValues) => {
-    const id = createRoom();
-    navigate(`/room/${id}?room=${room}&name=${name}`);
+  const onSubmit = async ({ name }: IFormValues) => {
+    const user = localStorage.getItem("userName") ?? "";
+    const id = await roomClient.createRoom();
+
+    if (user) {
+      navigate(`/room/${name}?user=${user}`);
+    } else {
+      navigate(`/join/${id}?room=${name}`);
+    }
   };
 
   return (
@@ -64,7 +66,7 @@ export function Connect() {
                   component={() => (
                     <TextField id="filled-basic" label="Filled" variant="filled" />
                   )}
-                  validate={(val) => (val ? undefined : "required")}
+                  validate={required}
                 />
               </div>
               <Button variant="contained" disabled={invalid} onClick={(e) => {

@@ -2,44 +2,56 @@ import react, { DetailedHTMLProps, HTMLAttributes } from "react";
 import { Link } from "react-router-dom";
 import "./App.css";
 import TextField from "@mui/material/TextField";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useSearchParams } from "react-router-dom";
+import roomClient from "./roomClient";
 
-const styles: Record<
-string,
-DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>["style"]
-> = {
-room: {
-  flex: 1,
-},
-chatBox: {
-  backgroundColor: 'white',
-  borderWidth: 0,
-  color: 'black',
-  borderRadius: 5,
-}
-};
+type IMessage = unknown;
 
 export function Room() {
-  const { id } = useParams();
-  const [ searchParams ] = useSearchParams();
-  const name = searchParams.get("name")
-  const room = searchParams.get("room")
+  const { roomId } = useParams();
+  const [messages, setMessages] = useState<IMessage[]>([]);
+  const [searchParams] = useSearchParams();
+
+  const user = searchParams.get("user");
+  const room = searchParams.get("room");
+
+  const [isConnected, setIsConnected] = useState(Boolean(roomClient._peer));
+
+  useEffect(() => {
+    console.log("Starting", { roomId, peer: roomClient._peer });
+
+    if (roomId && !roomClient._peer) {
+      if (localStorage.getItem("roomId")) {
+        roomClient.createRoom();
+      } else {
+        roomClient.joinRoom(roomId, { metadata: { user, room } });
+      }
+
+      setIsConnected(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    roomClient.subcribeToStreams((stream) => {});
+
+    roomClient.subscribeToMessages((message) =>
+      setMessages((ms) => [...ms, message])
+    );
+  }, [room, isConnected]);
 
   return (
     <div className="App">
-      {/* WHAT WE NEED HERE */}
-      {/* NAVIGATION BETWEEN CHAT AND CANVAS */}
+      <header className="App-header">
+        <h1>{room}</h1>
 
-      <nav
-        style={{
-          borderBottom: "solid 1px",
-          paddingBottom: "1rem"
-        }}
-      >
-        <Link to="/chat">Chat</Link> |{" "}
-        <Link to="/expenses">Canvas</Link>
-      </nav>
+        <h2>Connected</h2>
+        <ul>
+          <li>{user}</li>
+          {/* <li>{roomClient._conn?.metadata.name}</li> */}
+        </ul>
+      </header>
     </div>
   );
 }
