@@ -1,10 +1,7 @@
 import react, { DetailedHTMLProps, HTMLAttributes } from "react";
 import { Form, Field } from "react-final-form";
 import { useNavigate } from "react-router";
-
-function createRoom() {
-  return Math.random().toString();
-}
+import roomClient from "./roomClient";
 
 interface IFormValues {
   name: string;
@@ -34,15 +31,14 @@ function required(val: any) {
 export function Connect() {
   let navigate = useNavigate();
 
-  const onSubmit = ({ name }: IFormValues) => {
-    const id = createRoom();
+  const onSubmit = async ({ name }: IFormValues) => {
+    const user = localStorage.getItem("userName") ?? "";
+    const id = await roomClient.createRoom();
 
-    const userName = localStorage.getItem("userName");
-
-    if (userName) {
-      navigate(`/room/${id}?name=${userName}&room=${name}`);
+    if (user) {
+      navigate(`/room/${name}?user=${user}`);
     } else {
-      navigate(`/join/${id}?name=${name}`);
+      navigate(`/join/${id}?room=${name}`);
     }
   };
 

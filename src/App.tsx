@@ -1,14 +1,16 @@
-import { useState } from 'react';
-import './App.css';
-import roomClient from './room'
+import React from "react";
+import { Route, Routes } from "react-router";
+import "./App.css";
+import { Connect } from "./Connect";
+import { Join } from "./Join";
+import { Room } from "./Room";
 
 export default function App() {
-  const [roomId, setRoomId] = useState('')
   return (
     <Routes>
       <Route path="/" element={<Connect />} />
-      <Route path="join/:id" element={<Join />} />
-      <Route path="room/:id" element={<Room />} />
+      <Route path="join/:roomId" element={<Join />} />
+      <Route path="room/:roomId" element={<Room />} />
     </Routes>
   );
 }

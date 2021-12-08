@@ -1,7 +1,8 @@
-import react, { DetailedHTMLProps, HTMLAttributes } from "react";
+import React, { DetailedHTMLProps, HTMLAttributes, useState } from "react";
 import { Form, Field } from "react-final-form";
 import { useNavigate, useParams } from "react-router";
 import { useSearchParams } from "react-router-dom";
+import roomClient from "./roomClient";
 
 interface IFormValues {
   name: string;
@@ -30,20 +31,28 @@ function required(val: any) {
 }
 
 export function Join() {
-  const { id } = useParams();
+  const { roomId } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const room = searchParams.get("name");
+  const room = searchParams.get("room");
 
-  if (!room) {
+  if (!room || !roomId) {
     navigate("/");
+    return null;
   }
 
   const onSubmit = ({ name, room }: IFormValues) => {
     localStorage.setItem("userName", name);
 
-    navigate(`/room/${id}?room=${room}&name=${name}`);
+    console.log("peer is ", roomClient._peer);
+    console.log("connecting to room ", { roomId });
+
+    if (!roomClient._peer) {
+      roomClient.joinRoom(roomId, { metadata: { name } });
+    }
+
+    navigate(`/room/${roomId}/?room=${room}&user=${name}`);
   };
 
   return (
