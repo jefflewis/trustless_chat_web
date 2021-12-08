@@ -71,10 +71,11 @@ export function Canvas() {
     }
 
     const context = ref?.current?.getContext("2d");
+
     var pos = fixPosition(e, ref.current);
     setIsMouseDown(true);
     context?.beginPath();
-    context?.moveTo(pos.x, pos.y);
+    context?.moveTo(pos.x - 300, pos.y - 120);
     return false;
   };
 
@@ -87,7 +88,8 @@ export function Canvas() {
     const context = ref.current.getContext("2d");
 
     if (isMouseDown) {
-      context?.lineTo(pos.x, pos.y);
+      console.log("pos", pos);
+      context?.lineTo(pos.x - 300, pos.y - 120);
       context?.stroke();
     }
   };
@@ -97,6 +99,7 @@ export function Canvas() {
   };
 
   useEffect(() => {
+    // make it white for the rtc video to work
     const context = ref.current?.getContext("2d");
     if (context) {
       context.rect(0, 0, 300, 300);
@@ -113,9 +116,15 @@ export function Canvas() {
         border: "1 px solid red",
         margin: 40,
         flexWrap: "wrap",
+        position: "relative",
       }}
     >
       <canvas
+        style={{
+          zIndex: 10,
+          opacity: 0.5,
+          position: "absolute",
+        }}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
@@ -124,8 +133,15 @@ export function Canvas() {
         width="300"
         height="300"
       />
+
       {remoteStream && (
-        <Video width="300" height="300" isRemote stream={remoteStream} />
+        <Video
+          style={{ position: "absolute" }}
+          width="300"
+          height="300"
+          isRemote
+          stream={remoteStream}
+        />
       )}
     </div>
   );
