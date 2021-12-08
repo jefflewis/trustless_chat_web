@@ -1,9 +1,12 @@
 import Peer from "peerjs";
 import EventEmitter from "events";
 
-type Message = {
+export interface Message {
+  id: string;
+  sentBy: string;
+  sentAt: string;
   text: string;
-};
+}
 
 type Stream = {
   mediaStream: MediaStream;
@@ -88,9 +91,9 @@ class RoomClient {
             clearInterval(connectionInterval);
           }
 
-          connectionInterval = setInterval(() => {
-            peer.connect(roomId, options);
-          }, 250);
+          // connectionInterval = setInterval(() => {
+          //   peer.connect(roomId, options);
+          // }, 250);
         });
 
         connection.on("data", this._receiveMessage);

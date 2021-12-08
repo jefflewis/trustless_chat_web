@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
+import { Field, Form } from "react-final-form";
 import { useParams } from "react-router";
 import { useSearchParams } from "react-router-dom";
-import roomClient from "./roomClient";
+import roomClient, { Message } from "./roomClient";
+import { v4 as uuid } from "uuid";
+import uniq from "lodash/uniq";
 
 type IMessage = unknown;
 
 export function Room() {
   const { roomId } = useParams();
-  const [messages, setMessages] = useState<IMessage[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [searchParams] = useSearchParams();
 
   const user = searchParams.get("user");
@@ -33,9 +36,13 @@ export function Room() {
     roomClient.subcribeToStreams((stream) => {});
 
     roomClient.subscribeToMessages((message) =>
-      setMessages((ms) => [...ms, message])
+      setMessages((ms) => uniq([...ms, message]))
     );
   }, [room, isConnected]);
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="App">
@@ -47,6 +54,42 @@ export function Room() {
           <li>{user}</li>
           <li>{roomClient._conn?.metadata.name}</li>
         </ul>
+
+        <ul>
+          {messages.map((message) => {
+            return (
+              <li key={message.id}>
+                <div>{message.text}</div>
+                <div>{message.sentAt}</div>
+              </li>
+            );
+          })}
+        </ul>
+        <Form
+          onSubmit={({ text }) => {
+            const message: Message = {
+              sentAt: new Date().toISOString(),
+              text,
+              id: uuid(),
+              sentBy: user,
+            };
+            roomClient.sendMessage(message);
+            setMessages((ms) => uniq([...ms, message]));
+          }}
+          render={({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Field name="text" component="input" />
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSubmit();
+                }}
+              >
+                Send
+              </button>
+            </form>
+          )}
+        />
       </header>
     </div>
   );
