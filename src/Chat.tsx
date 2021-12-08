@@ -51,8 +51,6 @@ export function Chat({ messages, onSendMessage, user }: ChatProps) {
       <Launcher
         agentProfile={{
           teamName: user,
-          imageUrl:
-            "https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png",
         }}
         onMessageWasSent={(message: MessageList) => {
           const updatedMessageCount = isOpen
