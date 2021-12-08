@@ -1,6 +1,8 @@
+import { Button, TextField } from "@mui/material";
 import react, { DetailedHTMLProps, HTMLAttributes } from "react";
 import { Form, Field } from "react-final-form";
 import { useNavigate } from "react-router";
+import { TextInput } from "./Components";
 import roomClient from "./roomClient";
 
 interface IFormValues {
@@ -32,7 +34,7 @@ export function Connect() {
   let navigate = useNavigate();
 
   const onSubmit = async ({ name }: IFormValues) => {
-    const user = localStorage.getItem("userName") ?? "";
+    const user = localStorage.getItem("userName") ?? ""
     const id = await roomClient.createRoom();
 
     if (user) {
@@ -41,6 +43,8 @@ export function Connect() {
       navigate(`/join/${id}?room=${name}`);
     }
   };
+
+  console.log("hello world");
 
   return (
     <Form onSubmit={onSubmit} initialValues={{ room: "", name: "" }}>
@@ -52,19 +56,33 @@ export function Connect() {
             </header>
             <article>
               <div style={styles.field}>
-                <label htmlFor="name">Room Name</label>
-                <Field name="name" component="input" validate={required} />
+                <Field
+                  name="room"
+                  render={({ input }) => (
+                    <TextInput input={input} label="Room Name" required />
+                  )}
+                  validate={required}
+                />
               </div>
-              <button
+              <div style={styles.field}>
+                <Field
+                  name="name"
+                  render={({ input }) => (
+                    <TextInput input={input} label="Your Name" required />
+                  )}
+                  validate={required}
+                />
+              </div>
+              <Button
+                variant="contained"
+                disabled={invalid}
                 onClick={(e) => {
                   e.preventDefault();
                   handleSubmit();
                 }}
-                disabled={invalid}
-                className="primary"
               >
                 Connect
-              </button>
+              </Button>
             </article>
           </form>
         );
