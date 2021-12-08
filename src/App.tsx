@@ -1,12 +1,15 @@
-import React from 'react';
-import logo from './logo.svg';
+import {useState} from 'react';
 import './App.css';
 
+import roomClient from './room'
+
 export default function App() {
+  const [roomId, setRoomId] = useState('')
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <input type="text" onChange={(e) => setRoomId(e.target.value)} />
+        <button onClick={() => { roomClient.joinRoom(roomId) }}>Join Room</button>
         <p>
           Trustless Chat
         </p>

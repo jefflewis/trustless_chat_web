@@ -4,6 +4,9 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import './index.css';
+import roomClient from './room'
+
+roomClient.createRoom()
 
 ReactDOM.render(
   <React.StrictMode>
