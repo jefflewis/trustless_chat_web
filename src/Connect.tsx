@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { DetailedHTMLProps, HTMLAttributes } from "react";
 import { Form, Field } from "react-final-form";
 import { useNavigate } from "react-router";
@@ -18,6 +18,8 @@ const styles: Record<
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    flex: 1,
+    height: "100vh",
   },
   field: {
     display: "flex",
@@ -46,7 +48,14 @@ export function Connect() {
 
   return (
     <Form onSubmit={onSubmit} initialValues={{ roomName: "" }}>
-      {({ invalid, handleSubmit }) => {
+      {({ invalid, handleSubmit, submitting }) => {
+        if (submitting) {
+          return (
+            <div style={styles.form}>
+              <CircularProgress color="primary" size={100} />
+            </div>
+          );
+        }
         return (
           <form style={styles.form} onSubmit={handleSubmit}>
             <header className="App-header">
@@ -63,6 +72,7 @@ export function Connect() {
                 />
               </div>
               <Button
+                fullWidth={true}
                 variant="contained"
                 disabled={invalid}
                 onClick={(e) => {
