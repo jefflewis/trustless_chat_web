@@ -1,7 +1,4 @@
-import react, { DetailedHTMLProps, HTMLAttributes } from "react";
-import { Link } from "react-router-dom";
 import "./App.css";
-import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
 import { Field, Form } from "react-final-form";
 import { useParams } from "react-router";
@@ -12,7 +9,6 @@ import uniq from "lodash/uniq";
 import mediaClient from './mediaClient';
 import { Video, Audio} from './Media'
 
-type IMessage = unknown;
 
 function useLocalStream() {
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
