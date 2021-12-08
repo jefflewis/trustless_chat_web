@@ -12,7 +12,7 @@ export function Video({ stream, isRemote }: { stream: MediaStream, isRemote: boo
     ref.current.srcObject = stream
   }, [])
 
-  return <video style={{ transform: buildVideoTransform(isRemote) }} ref={ref} height={400} width={400} autoPlay></video>
+  return <video style={{ transform: buildVideoTransform(isRemote) }} ref={ref} height={400} width={400} autoPlay muted={!isRemote}></video>
 }
 
 export function Audio({ stream }: { stream: MediaStream}) {
