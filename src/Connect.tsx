@@ -34,11 +34,11 @@ export function Connect() {
   let navigate = useNavigate();
 
   const onSubmit = async ({ name }: IFormValues) => {
-    const user = localStorage.getItem("userName") ?? "";
+    // const user = localStorage.getItem("userName") ?? ""; add later
     const id = await roomClient.createRoom();
 
-    if (user) {
-      navigate(`/room/${name}?user=${user}`);
+    if (name) {
+      navigate(`/room/${name}?user=${name}`);
     } else {
       navigate(`/join/${id}?room=${name}`);
     }
@@ -56,7 +56,6 @@ export function Connect() {
             </header>
             <article>
               <div style={styles.field}>
-                <label htmlFor="room">Room Name</label>
                 <Field
                   name="room"
                   render={({ input }) => (
