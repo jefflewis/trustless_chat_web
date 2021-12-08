@@ -1,5 +1,7 @@
 import React, { DetailedHTMLProps, HTMLAttributes, useState } from "react";
 import { Form, Field } from "react-final-form";
+import { Button } from "@mui/material";
+import { TextInput } from "./Components";
 import { useNavigate, useParams } from "react-router";
 import { useSearchParams } from "react-router-dom";
 import roomClient from "./roomClient";
@@ -65,19 +67,25 @@ export function Join() {
             </header>
             <article>
               <div style={styles.field}>
-                <label htmlFor="name">Your Name</label>
-                <Field name="name" component="input" validate={required} />
+                <Field
+                  name="name"
+                  render={({ input }) => (
+                    <TextInput input={input} label="Your Name" required />
+                  )}
+                  validate={required}
+                />
               </div>
-              <button
+              <Button
+                fullWidth={true}
+                variant="contained"
+                disabled={invalid}
                 onClick={(e) => {
                   e.preventDefault();
                   handleSubmit();
                 }}
-                disabled={invalid}
-                className="primary"
               >
-                Join
-              </button>
+                Connect
+              </Button>
             </article>
           </form>
         );
