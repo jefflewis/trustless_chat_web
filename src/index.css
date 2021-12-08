@@ -47,6 +47,12 @@ body {
   height: 100vh;
 }
 
+#root {
+  width: 100vw;
+  height: 100vh;
+  /* border: solid 1px lime; */
+}
+
 button {
   font-size: 1rem;
   border-radius: 4px;
@@ -55,4 +61,12 @@ button {
   margin: 4px;
   padding: 10px;
   cursor: pointer;
+}
+
+.debug {
+  border: solid 1px lime;
+}
+
+.MuiAppBar-colorPrimary {
+  background-color: #ffa31a !important;
 }
