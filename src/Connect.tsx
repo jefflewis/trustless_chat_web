@@ -1,12 +1,12 @@
-import { Button, TextField } from "@mui/material";
-import react, { DetailedHTMLProps, HTMLAttributes } from "react";
+import { Button } from "@mui/material";
+import { DetailedHTMLProps, HTMLAttributes } from "react";
 import { Form, Field } from "react-final-form";
 import { useNavigate } from "react-router";
 import { TextInput } from "./Components";
 import roomClient from "./roomClient";
 
 interface IFormValues {
-  name: string;
+  roomName: string;
 }
 
 const styles: Record<
@@ -31,44 +31,33 @@ function required(val: any) {
 }
 
 export function Connect() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
-  const onSubmit = async ({ name }: IFormValues) => {
-    const user = localStorage.getItem("userName") ?? ""
+  const onSubmit = async ({ roomName }: IFormValues) => {
+    const user = localStorage.getItem("userName") ?? "";
     const id = await roomClient.createRoom();
 
     if (user) {
-      navigate(`/room/${id}?room=${name}&user=${user}`);
+      navigate(`/room/${id}?user=${user}&room=${roomName}`);
     } else {
-      navigate(`/join/${id}?room=${name}`);
+      navigate(`/join/${id}?room=${roomName}`);
     }
   };
 
-  console.log("hello world");
-
   return (
-    <Form onSubmit={onSubmit} initialValues={{ room: "", name: "" }}>
+    <Form onSubmit={onSubmit} initialValues={{ roomName: "" }}>
       {({ invalid, handleSubmit }) => {
         return (
-          <form style={styles.form}>
+          <form style={styles.form} onSubmit={handleSubmit}>
             <header className="App-header">
               <h1>Create a room</h1>
             </header>
             <article>
               <div style={styles.field}>
                 <Field
-                  name="room"
+                  name="roomName"
                   render={({ input }) => (
                     <TextInput input={input} label="Room Name" required />
-                  )}
-                  validate={required}
-                />
-              </div>
-              <div style={styles.field}>
-                <Field
-                  name="name"
-                  render={({ input }) => (
-                    <TextInput input={input} label="Your Name" required />
                   )}
                   validate={required}
                 />
