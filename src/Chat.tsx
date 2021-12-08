@@ -16,6 +16,10 @@ interface ChatProps {
   user: string;
 }
 
+const getWhoYouAreChattingWith = (messages: Message[]): string => {
+  return messages[0].sentBy || "";
+};
+
 const transformChatMessages = (
   messages: Message[],
   user: string
@@ -35,10 +39,14 @@ const transformChatMessages = (
 export function Chat({ messages, onSendMessage, user }: ChatProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [newMessagesCount, setNewMessagesCount] = useState(0);
+  const [chattingWith, setChattingWith] = useState("");
 
   useEffect(() => {
     if (!isOpen && messages.length !== 0) {
       setNewMessagesCount(newMessagesCount + 1);
+    }
+    if (messages.length > 0) {
+      setChattingWith(getWhoYouAreChattingWith(messages));
     }
   }, [messages.length]);
 
@@ -50,7 +58,7 @@ export function Chat({ messages, onSendMessage, user }: ChatProps) {
     <div>
       <Launcher
         agentProfile={{
-          teamName: user,
+          teamName: chattingWith,
         }}
         onMessageWasSent={(message: MessageList) => {
           const updatedMessageCount = isOpen
