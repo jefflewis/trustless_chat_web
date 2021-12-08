@@ -5,9 +5,9 @@ import { useSearchParams } from "react-router-dom";
 import roomClient, { Message } from "./roomClient";
 import { v4 as uuid } from "uuid";
 import uniq from "lodash/uniq";
-import mediaClient from './mediaClient';
-import { Video, Audio } from './Media'
-import { useIsTalking } from './audio';
+import mediaClient from "./mediaClient";
+import { Video, Audio } from "./Media";
+import { useIsTalking } from "./audio";
 
 import { Chat } from "./Chat";
 import { AppBar, useTheme, Typography, Alert, Snackbar } from "@mui/material";
@@ -60,14 +60,16 @@ export function Room() {
           setIsConnected(true);
         });
       } else {
-        roomClient.joinRoom(roomId, { metadata: { user, room } }).finally(() => {
-          console.log("JOINED")
-          mediaClient.init().then(() => {
-            const localStream = mediaClient.getStream()
-            roomClient.call(localStream)
-          })
-          setIsConnected(true);
-        });
+        roomClient
+          .joinRoom(roomId, { metadata: { user, room } })
+          .finally(() => {
+            console.log("JOINED");
+            mediaClient.init().then(() => {
+              const localStream = mediaClient.getStream();
+              roomClient.call(localStream);
+            });
+            setIsConnected(true);
+          });
       }
     }
   }, []);
@@ -91,12 +93,11 @@ export function Room() {
     );
   }, [room, isConnected]);
 
-  const isLocalTalking = useIsTalking(localStream)
+  const isLocalTalking = useIsTalking(localStream);
 
   if (!user) {
     return null;
   }
-
 
   return (
     <>
@@ -167,7 +168,7 @@ export function Room() {
       <Snackbar
         open={snackbarOpen}
         onClose={() => setSnackbarOpen(false)}
-        autoHideDuration={6000}
+        autoHideDuration={3000}
         sx={{ width: "90%" }}
       >
         <Alert
@@ -181,4 +182,3 @@ export function Room() {
     </>
   );
 }
-

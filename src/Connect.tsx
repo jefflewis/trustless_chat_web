@@ -39,7 +39,9 @@ export function Connect() {
     const user = localStorage.getItem("userName") ?? "";
     const id = await roomClient.createRoom();
 
-    navigator.clipboard.writeText(id);
+    navigator.clipboard.writeText(
+      `http://localhost:3000/join/${id}?room=${roomName}`
+    );
 
     if (user) {
       navigate(`/room/${id}?user=${user}&room=${roomName}`);
