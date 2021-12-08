@@ -182,7 +182,7 @@ export function Room() {
       <Snackbar
         open={snackbarOpen}
         onClose={() => setSnackbarOpen(false)}
-        autoHideDuration={6000}
+        autoHideDuration={3000}
         sx={{ width: "90%" }}
       >
         <Alert

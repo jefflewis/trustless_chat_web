@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { map, debounceTime, Subject, tap, pairwise, filter } from "rxjs";
+import {
+  map,
+  debounceTime,
+  Subject,
+  distinctUntilChanged,
+  pairwise,
+  filter,
+} from "rxjs";
 
 function calcRootMeanSquare(buffer: Float32Array): number {
   let rms = 0;
@@ -44,7 +51,8 @@ export function useIsTalking(
     }
     const slp = new SoundPressureLevel(stream);
     const isSlpAboveTalkingLevel$ = slp.subject.pipe(
-      map((slpValue) => slpValue >= talkingLevel)
+      map((slpValue) => slpValue >= talkingLevel),
+      distinctUntilChanged()
     );
 
     isSlpAboveTalkingLevel$.subscribe((isSlpAboveTalkingLevel) => {
@@ -56,12 +64,7 @@ export function useIsTalking(
     });
 
     isSlpAboveTalkingLevel$
-      .pipe(
-        pairwise(),
-        filter(([prev, curr]) => prev !== curr),
-        map(([_prev, curr]) => curr),
-        debounceTime(1000)
-      )
+      .pipe(debounceTime(1000))
       .subscribe((isSlpAboveTalkingLevel) => {
         if (!isSlpAboveTalkingLevel) {
           console.log("SETTING IS TALKING TO FALSE");

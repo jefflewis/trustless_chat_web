@@ -37,7 +37,7 @@ export function Chat({ messages, onSendMessage, user }: ChatProps) {
   const [newMessagesCount, setNewMessagesCount] = useState(0);
 
   useEffect(() => {
-    if (!isOpen) {
+    if (!isOpen && messages.length !== 0) {
       setNewMessagesCount(newMessagesCount + 1);
     }
   }, [messages.length]);
