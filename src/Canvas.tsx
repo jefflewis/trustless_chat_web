@@ -75,7 +75,7 @@ export function Canvas() {
     var pos = fixPosition(e, ref.current);
     setIsMouseDown(true);
     context?.beginPath();
-    context?.moveTo(pos.x - 300, pos.y - 120);
+    context?.moveTo(pos.x - 410, pos.y - 110);
     return false;
   };
 
@@ -89,7 +89,7 @@ export function Canvas() {
 
     if (isMouseDown) {
       console.log("pos", pos);
-      context?.lineTo(pos.x - 300, pos.y - 120);
+      context?.lineTo(pos.x - 410, pos.y - 110);
       context?.stroke();
     }
   };
@@ -102,7 +102,7 @@ export function Canvas() {
     // make it white for the rtc video to work
     const context = ref.current?.getContext("2d");
     if (context) {
-      context.rect(0, 0, 300, 300);
+      context.rect(0, 0, 800, 800);
       context.fillStyle = "white";
       context.fill();
     }
@@ -130,15 +130,15 @@ export function Canvas() {
         onMouseUp={onMouseUp}
         ref={ref}
         id="canvas"
-        width="300"
-        height="300"
+        width="800"
+        height="800"
       />
 
       {remoteStream && (
         <Video
           style={{ position: "absolute" }}
-          width="300"
-          height="300"
+          width="800"
+          height="800"
           isRemote
           stream={remoteStream}
         />

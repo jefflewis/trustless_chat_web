@@ -64,7 +64,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-
+.sc-chat-window {
+  z-index: 200;
+}
+ 
 .primary {
   background-color: #ffa31a;
 }
