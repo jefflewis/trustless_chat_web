@@ -60,7 +60,6 @@ export function Join() {
 
   return (
     <div
-      className="debug"
       style={{
         height: "100%",
         width: "100%",
