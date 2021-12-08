@@ -7,6 +7,59 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.sc-message--content.received .sc-message--text {
+  color: white;
+  background-color: #808080;
+  margin-right: 40px;
+}
+
+.sc-header {
+  background: #ffa31a;
+  min-height: 75px;
+  border-top-left-radius: 9px;
+  border-top-right-radius: 9px;
+  color: white;
+  padding: 10px;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 20%);
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+}
+
+element.style {
+}
+.sc-message--content.sent .sc-message--text {
+  color: white;
+  background-color: #ffa31a;
+  max-width: calc(100% - 120px);
+  word-wrap: break-word;
+}
+.sc-message--text {
+  padding: 17px 20px;
+  border-radius: 6px;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  -webkit-font-smoothing: subpixel-antialiased;
+  word-wrap: break-word;
+  width: calc(100% - 90px);
+}
+
+.sc-launcher {
+  width: 60px;
+  height: 60px;
+  background-color: #ffa31a;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+  border-radius: 50%;
+  box-shadow: none;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
