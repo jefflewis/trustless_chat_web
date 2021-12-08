@@ -6,12 +6,11 @@ import roomClient, { Message } from "./roomClient";
 import { v4 as uuid } from "uuid";
 import uniq from "lodash/uniq";
 import mediaClient from "./mediaClient";
-import { useIsTalking } from "./audio";
 import { AppBar, useTheme, Typography, Alert, Snackbar } from "@mui/material";
 import { capitalize } from "lodash";
 import { Media } from "./Media";
-import { Chat } from "./Chat";
 import { Canvas } from "./Canvas";
+import { Chat } from "./Chat";
 
 export function Room() {
   const theme = useTheme();
@@ -25,6 +24,17 @@ export function Room() {
 
   const [isConnected, setIsConnected] = useState(Boolean(roomClient._peer));
   const [snackbarOpen, setSnackbarOpen] = useState(true);
+
+  useEffect(() => {
+    roomClient.subscribeToCalls((call) => {
+      if (call.metadata.type === "video") {
+        mediaClient.init().then((stream) => {
+          console.log("got a call", { call, stream });
+          roomClient.answer(call, stream);
+        });
+      }
+    });
+  }, []);
 
   const onSendMessage = (text: string) => {
     console.log(text, "this is entering the chattttt");
@@ -50,11 +60,6 @@ export function Room() {
         roomClient
           .joinRoom(roomId, { metadata: { user, room } })
           .finally(() => {
-            console.log("JOINED");
-            mediaClient.init().then(() => {
-              const localStream = mediaClient.getStream();
-              roomClient.call(localStream);
-            });
             setIsConnected(true);
           });
       }
@@ -127,6 +132,7 @@ export function Room() {
                 theme.palette.secondary.light || theme.palette.background.paper,
             }}
           >
+            <Canvas />
             <Chat
               messages={messages}
               onSendMessage={onSendMessage}

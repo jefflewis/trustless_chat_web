@@ -1,5 +1,5 @@
+import React, { useEffect, useRef, useState } from "react";
 import { useTheme } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
 import { useIsTalking } from "./audio";
 import mediaClient from "./mediaClient";
 import roomClient from "./roomClient";
@@ -25,7 +25,7 @@ export function Media() {
 
   useEffect(() => {
     roomClient._emitter.on("joined", () => {
-      roomClient.subcribeToStreams((remoteStream) => {
+      roomClient.subscribeToStreams((remoteStream) => {
         console.log("remote stream came in", remoteStream);
         setRemoteStream(remoteStream.mediaStream);
       });
@@ -33,31 +33,30 @@ export function Media() {
     });
 
     roomClient._emitter.on("created", () => {
-      roomClient.subcribeToStreams((remoteStream) => {
+      roomClient.subscribeToStreams((remoteStream) => {
+        if (remoteStream.type !== "video") {
+          return;
+        }
         console.log("remote stream came in", remoteStream);
         setRemoteStream(remoteStream.mediaStream);
-      });
-      roomClient.subscribeToCalls((call) => {
-        mediaClient.init().then((stream) => {
-          console.log("got a call", { call, stream });
-          roomClient.answer(call, stream);
-        });
       });
     });
   }, []);
 
   useEffect(() => {
     if (localStream && isConnected) {
-      roomClient.call(localStream);
+      roomClient.call(localStream, { metadata: { type: "video" } });
     }
   }, [localStream, isConnected]);
 
   return (
-    <div>
+    <>
       {localStream && <VideoAvatar isRemote={false} stream={localStream} />}
-      {remoteStream && <VideoAvatar isRemote={true} stream={remoteStream} />}
+      <div style={{ marginTop: "4rem" }}>
+        {remoteStream && <VideoAvatar isRemote={true} stream={remoteStream} />}
+      </div>
       {remoteStream && <Audio stream={remoteStream} />}
-    </div>
+    </>
   );
 }
 

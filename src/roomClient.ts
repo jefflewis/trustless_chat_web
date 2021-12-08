@@ -9,6 +9,7 @@ export interface Message {
 }
 
 type Stream = {
+  type: string;
   mediaStream: MediaStream;
 };
 
@@ -37,7 +38,9 @@ class RoomClient {
 
       this._peer.on("call", (call) => {
         console.log("ROOM HOST GOT CALL", call);
-        call.on("stream", this._receiveStream);
+        call.on("stream", (stream) =>
+          this._receiveStream(stream, call.metadata.type)
+        );
         this._emitter.emit("CALL", call);
       });
 
@@ -113,22 +116,25 @@ class RoomClient {
     }
     console.log("CALLING", this._conn.peer);
     const call = this._peer.call(this._conn.peer, mediaStream, options);
-    call.on("stream", this._receiveStream);
+
+    call.on("stream", (stream) =>
+      this._receiveStream(stream, call.metadata.type)
+    );
   };
 
-  _receiveStream = (mediaStream: MediaStream) => {
-    this._emitter.emit("STREAM", { mediaStream });
+  _receiveStream = (mediaStream: MediaStream, type: string) => {
+    this._emitter.emit("STREAM", { mediaStream, type });
   };
 
   subscribeToCalls = (subscribe: (call: Peer.MediaConnection) => void) => {
     this._emitter.on("CALL", subscribe);
   };
 
-  subcribeToStreams = (subscribe: (stream: Stream) => void) => {
+  subscribeToStreams = (subscribe: (stream: Stream) => void) => {
     this._emitter.on("STREAM", subscribe);
   };
 
-  answer = (call: Peer.MediaConnection, mediaStream: MediaStream) => {
+  answer = (call: Peer.MediaConnection, mediaStream?: MediaStream) => {
     console.log("answering", { call, mediaStream });
     call.answer(mediaStream);
   };
