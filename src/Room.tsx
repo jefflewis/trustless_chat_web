@@ -5,9 +5,9 @@ import { useSearchParams } from "react-router-dom";
 import roomClient, { Message } from "./roomClient";
 import { v4 as uuid } from "uuid";
 import uniq from "lodash/uniq";
-import mediaClient from './mediaClient';
-import { Video, Audio } from './Media'
-import { useIsTalking } from './audio';
+import mediaClient from "./mediaClient";
+import { Video, Audio } from "./Media";
+import { useIsTalking } from "./audio";
 
 import { Chat } from "./Chat";
 import { AppBar, useTheme, Typography, Alert, Snackbar } from "@mui/material";
@@ -60,14 +60,16 @@ export function Room() {
           setIsConnected(true);
         });
       } else {
-        roomClient.joinRoom(roomId, { metadata: { user, room } }).finally(() => {
-          console.log("JOINED")
-          mediaClient.init().then(() => {
-            const localStream = mediaClient.getStream()
-            roomClient.call(localStream)
-          })
-          setIsConnected(true);
-        });
+        roomClient
+          .joinRoom(roomId, { metadata: { user, room } })
+          .finally(() => {
+            console.log("JOINED");
+            mediaClient.init().then(() => {
+              const localStream = mediaClient.getStream();
+              roomClient.call(localStream);
+            });
+            setIsConnected(true);
+          });
       }
     }
   }, []);
@@ -91,12 +93,12 @@ export function Room() {
     );
   }, [room, isConnected]);
 
-  const isLocalTalking = useIsTalking(localStream)
+  const isLocalTalking = useIsTalking(localStream);
+  const isRemoteTalking = useIsTalking(remoteStream);
 
   if (!user) {
     return null;
   }
-
 
   return (
     <>
@@ -140,10 +142,22 @@ export function Room() {
             }}
           >
             <div>
-              {localStream && <Video isRemote={false} stream={localStream} />}
+              {localStream && (
+                <Video
+                  talking={isLocalTalking}
+                  isRemote={false}
+                  stream={localStream}
+                />
+              )}
             </div>
             <div style={{ marginTop: "4rem" }}>
-              {remoteStream && <Video isRemote={true} stream={remoteStream} />}
+              {remoteStream && (
+                <Video
+                  talking={isRemoteTalking}
+                  isRemote={true}
+                  stream={remoteStream}
+                />
+              )}
             </div>
             {remoteStream && <Audio stream={remoteStream} />}
           </div>
@@ -182,4 +196,3 @@ export function Room() {
     </>
   );
 }
-

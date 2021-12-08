@@ -1,5 +1,5 @@
 import { useTheme } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 function buildVideoTransform(isRemote: boolean) {
   return `scale(${isRemote ? 1 : -1}, 1)`;
@@ -7,9 +7,11 @@ function buildVideoTransform(isRemote: boolean) {
 export function Video({
   stream,
   isRemote,
+  talking,
 }: {
   stream: MediaStream;
   isRemote: boolean;
+  talking?: boolean;
 }) {
   const ref = useRef<HTMLVideoElement | null>(null);
   const { palette } = useTheme();
@@ -22,14 +24,6 @@ export function Video({
   }, []);
 
   const avatarSize = "15rem";
-  const [borderWidth, setBorderWidth] = useState(4);
-  useEffect(() => {
-    const id = setInterval(() => {
-      setBorderWidth((w) => (w === 4 ? 12 : 4));
-    }, 1000);
-
-    return () => clearInterval(id);
-  }, []);
 
   return (
     <div>
@@ -37,12 +31,15 @@ export function Video({
         style={{
           borderRadius: "50%",
           overflow: "hidden",
-          border: `${borderWidth}px solid`,
-          borderColor: palette.primary.main,
+          border: `4px solid ${palette.primary.main}`,
           height: avatarSize,
           width: avatarSize,
-          // position: "absolute",
-          transition: "border-width 0.3s ease-in-out",
+          animationName: "grow",
+          animationDuration: "2s",
+          animationIterationCount: "infinite",
+          animationTimingFunction: "ease-out",
+          animationFillMode: "forward",
+          animationPlayState: talking ? "initial" : "paused",
         }}
       >
         <div

@@ -124,14 +124,14 @@ button {
   background-color: #ffa31a !important;
 }
 
-@keyframes avatar-shadow {
+@keyframes grow {
   0% {
-    opacity: 0;
+    transform: scale(1);
   }
   50% {
-    opacity: 1;
+    transform: scale(1.07);
   }
-  to {
-    opacity: 0;
+  100% {
+    transform: scale(1);
   }
 }
