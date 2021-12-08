@@ -7,7 +7,8 @@ import roomClient, { Message } from "./roomClient";
 import { v4 as uuid } from "uuid";
 import uniq from "lodash/uniq";
 import mediaClient from './mediaClient';
-import { Video, Audio} from './Media'
+import { Video, Audio } from './Media'
+import { useIsTalking } from './audio';
 
 
 function useLocalStream() {
@@ -43,6 +44,7 @@ export function Room() {
         });
       } else {
         roomClient.joinRoom(roomId, { metadata: { user, room } }).finally(() => {
+          console.log("JOINED")
           mediaClient.init().then(() => {
             const localStream = mediaClient.getStream()
             roomClient.call(localStream)
@@ -73,9 +75,12 @@ export function Room() {
     );
   }, [room, isConnected]);
 
+  const isLocalTalking = useIsTalking(localStream)
+
   if (!user) {
     return null;
   }
+
 
   return (
     <div className="App">

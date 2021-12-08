@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 function buildVideoTransform(isRemote: boolean) {
   return `scale(${isRemote ? 1 : -1}, 1)`
 }
+
 export function Video({ stream, isRemote }: { stream: MediaStream, isRemote: boolean}) {
   const ref = useRef<HTMLVideoElement | null>(null)
   useEffect(() => {
