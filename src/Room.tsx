@@ -18,7 +18,7 @@ export function Room() {
   useEffect(() => {
     console.log("Starting", { roomId, peer: roomClient._peer });
 
-    if (roomId && !roomClient._peer) {
+    if (roomId) {
       if (localStorage.getItem("roomId")) {
         roomClient.createRoom();
       } else {
@@ -45,7 +45,7 @@ export function Room() {
         <h2>Connected</h2>
         <ul>
           <li>{user}</li>
-          {/* <li>{roomClient._conn?.metadata.name}</li> */}
+          <li>{roomClient._conn?.metadata.name}</li>
         </ul>
       </header>
     </div>
