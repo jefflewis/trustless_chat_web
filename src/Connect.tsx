@@ -36,7 +36,7 @@ export function Connect() {
     const id = await roomClient.createRoom();
 
     if (user) {
-      navigate(`/room/${name}?user=${user}`);
+      navigate(`/room/${id}?room=${name}&user=${user}`);
     } else {
       navigate(`/join/${id}?room=${name}`);
     }

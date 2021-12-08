@@ -16,7 +16,6 @@ class RoomClient {
   _peer: Peer | null = null;
   _conn: Peer.DataConnection | null = null;
   _emitter: EventEmitter;
-  _missedCalls: Peer.MediaConnection[] = [];
 
   constructor() {
     this._emitter = new EventEmitter();
@@ -32,13 +31,14 @@ class RoomClient {
       console.log("new peer created", this._peer);
       this._peer.on("connection", (peerConn) => {
         this._conn = peerConn;
-        console.log(`Peer connected`, peerConn);
+        console.log("Peer connected", peerConn);
         this._conn.on("data", this._receiveMessage);
       });
 
       this._peer.on("call", (call) => {
-        this._missedCalls.push(call);
+        console.log("ROOM HOST GOT CALL", call);
         call.on("stream", this._receiveStream);
+        this._emitter.emit("CALL", call);
       });
 
       this._peer.on("open", (id) => {
@@ -107,6 +107,7 @@ class RoomClient {
     if (!this._conn || !this._peer) {
       throw new Error("no connection for call");
     }
+    console.log("CALLING", this._conn.peer);
     const call = this._peer.call(this._conn.peer, mediaStream);
     call.on("stream", this._receiveStream);
   };
@@ -115,15 +116,16 @@ class RoomClient {
     this._emitter.emit("STREAM", { mediaStream });
   };
 
+  subcribeToCalls = (subscribe: (call: Peer.MediaConnection) => void) => {
+    this._emitter.on("CALL", subscribe);
+  };
+
   subcribeToStreams = (subscribe: (stream: Stream) => void) => {
     this._emitter.on("STREAM", subscribe);
   };
 
-  answer = (mediaStreams: MediaStream[]) => {
-    mediaStreams.forEach((mediaStream) => {
-      const call = this._missedCalls.pop();
-      call?.answer(mediaStream);
-    });
+  answer = (call: Peer.MediaConnection, mediaStream: MediaStream) => {
+    call.answer(mediaStream);
   };
 
   _receiveMessage = (rawMsg: any) => {

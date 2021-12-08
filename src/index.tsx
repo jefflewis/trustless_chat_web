@@ -5,6 +5,9 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 
 import "./index.css";
+import mediaClient from './mediaClient';
+
+mediaClient.init()
 
 ReactDOM.render(
   <React.StrictMode>
