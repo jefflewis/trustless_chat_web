@@ -8,7 +8,7 @@ export function Video({ stream }: { stream: MediaStream}) {
     }
     ref.current.srcObject = stream
   }, [])
-  return <video ref={ref} height={100} width={100} autoPlay></video>
+  return <video ref={ref} height={400} width={400} autoPlay></video>
 }
 
 export function Audio({ stream }: { stream: MediaStream}) {

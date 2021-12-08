@@ -93,7 +93,6 @@ export function Room() {
         </ul>
         <div>
           {localStream && <Video stream={localStream} />}
-          {localStream && <Audio stream={localStream} />}
           {remoteStream && <Video stream={remoteStream} />}
           {remoteStream && <Audio stream={remoteStream} />}
         </div>
