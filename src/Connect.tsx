@@ -39,6 +39,8 @@ export function Connect() {
     const user = localStorage.getItem("userName") ?? "";
     const id = await roomClient.createRoom();
 
+    navigator.clipboard.writeText(id);
+
     if (user) {
       navigate(`/room/${id}?user=${user}&room=${roomName}`);
     } else {
@@ -48,14 +50,7 @@ export function Connect() {
 
   return (
     <Form onSubmit={onSubmit} initialValues={{ roomName: "" }}>
-      {({ invalid, handleSubmit, submitting }) => {
-        if (submitting) {
-          return (
-            <div style={styles.form}>
-              <CircularProgress color="primary" size={100} />
-            </div>
-          );
-        }
+      {({ invalid, handleSubmit }) => {
         return (
           <form style={styles.form} onSubmit={handleSubmit}>
             <header className="App-header">
