@@ -125,9 +125,21 @@ export function Room() {
           }}
         >
           {/* LEFT SECTION (user avatars) */}
-          <div style={{ flex: 1 }}>
-            {localStream && <Video isRemote={false} stream={localStream} />}
-            {remoteStream && <Video isRemote={true} stream={remoteStream} />}
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              justifyContent: "center",
+
+              paddingTop: "4rem",
+            }}
+          >
+            <div>
+              {localStream && <Video isRemote={false} stream={localStream} />}
+            </div>
+            <div style={{ paddingTop: "4rem" }}>
+              {remoteStream && <Video isRemote={true} stream={remoteStream} />}
+            </div>
             {remoteStream && <Audio stream={remoteStream} />}
           </div>
 
