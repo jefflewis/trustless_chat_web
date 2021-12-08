@@ -137,7 +137,6 @@ export function Room() {
               display: "flex",
               alignItems: "center",
               paddingTop: "4rem",
-              border: "solid 1px hotpink",
               flexDirection: "column",
             }}
           >
