@@ -1,4 +1,4 @@
-import { Button, CircularProgress, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { DetailedHTMLProps, HTMLAttributes } from "react";
 import { Form, Field } from "react-final-form";
 import { useNavigate } from "react-router";

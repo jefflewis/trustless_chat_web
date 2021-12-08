@@ -1,11 +1,13 @@
 class MediaClient {
   _stream: MediaStream | null = null;
   init = async () => {
-    return navigator.mediaDevices
-      .getUserMedia({ video: { width: 1280, height: 720 }, audio: true })
-      .then((stream) => {
-        this._stream = stream;
-      });
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { width: 1280, height: 720 },
+      audio: true,
+    });
+    this._stream = stream;
+
+    return this._stream;
   };
 
   getStream = () => {

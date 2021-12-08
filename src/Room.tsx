@@ -6,22 +6,11 @@ import roomClient, { Message } from "./roomClient";
 import { v4 as uuid } from "uuid";
 import uniq from "lodash/uniq";
 import mediaClient from "./mediaClient";
-import { Video, Audio } from "./Media";
-import { useIsTalking } from "./audio";
-
-import { Chat } from "./Chat";
 import { AppBar, useTheme, Typography, Alert, Snackbar } from "@mui/material";
 import { capitalize } from "lodash";
-
-function useLocalStream() {
-  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
-  useEffect(() => {
-    mediaClient.init().then(() => {
-      setLocalStream(mediaClient.getStream());
-    });
-  }, []);
-  return localStream;
-}
+import { Media } from "./Media";
+import { Canvas } from "./Canvas";
+import { Chat } from "./Chat";
 
 export function Room() {
   const theme = useTheme();
@@ -30,14 +19,22 @@ export function Room() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [searchParams] = useSearchParams();
 
-  const localStream = useLocalStream();
-  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
-
   const user = searchParams.get("user");
   const room = searchParams.get("room");
 
   const [isConnected, setIsConnected] = useState(Boolean(roomClient._peer));
   const [snackbarOpen, setSnackbarOpen] = useState(true);
+
+  useEffect(() => {
+    roomClient.subscribeToCalls((call) => {
+      if (call.metadata.type === "video") {
+        mediaClient.init().then((stream) => {
+          console.log("got a call", { call, stream });
+          roomClient.answer(call, stream);
+        });
+      }
+    });
+  }, []);
 
   const onSendMessage = (text: string) => {
     console.log(text, "this is entering the chattttt");
@@ -63,11 +60,6 @@ export function Room() {
         roomClient
           .joinRoom(roomId, { metadata: { user, room } })
           .finally(() => {
-            console.log("JOINED");
-            mediaClient.init().then(() => {
-              const localStream = mediaClient.getStream();
-              roomClient.call(localStream);
-            });
             setIsConnected(true);
           });
       }
@@ -78,23 +70,11 @@ export function Room() {
     if (!isConnected) {
       return;
     }
-    roomClient.subcribeToStreams((remoteStream) => {
-      console.log("remote stream came in", remoteStream);
-      setRemoteStream(remoteStream.mediaStream);
-    });
-    roomClient.subcribeToCalls((call) => {
-      if (localStream) {
-        roomClient.answer(call, localStream);
-      }
-    });
 
     roomClient.subscribeToMessages((message) =>
       setMessages((ms) => uniq([...ms, message]))
     );
   }, [room, isConnected]);
-
-  const isLocalTalking = useIsTalking(localStream);
-  const isRemoteTalking = useIsTalking(remoteStream);
 
   if (!user) {
     return null;
@@ -140,25 +120,7 @@ export function Room() {
               flexDirection: "column",
             }}
           >
-            <div>
-              {localStream && (
-                <Video
-                  talking={isLocalTalking}
-                  isRemote={false}
-                  stream={localStream}
-                />
-              )}
-            </div>
-            <div style={{ marginTop: "4rem" }}>
-              {remoteStream && (
-                <Video
-                  talking={isRemoteTalking}
-                  isRemote={true}
-                  stream={remoteStream}
-                />
-              )}
-            </div>
-            {remoteStream && <Audio stream={remoteStream} />}
+            <Media />
           </div>
 
           {/* RIGHT SECTION (canvas) */}
@@ -170,6 +132,7 @@ export function Room() {
                 theme.palette.secondary.light || theme.palette.background.paper,
             }}
           >
+            <Canvas />
             <Chat
               messages={messages}
               onSendMessage={onSendMessage}
