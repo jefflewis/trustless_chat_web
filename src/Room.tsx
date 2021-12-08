@@ -179,10 +179,10 @@ export function Room() {
         </div>
       </div>
       <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
         open={snackbarOpen}
         onClose={() => setSnackbarOpen(false)}
         autoHideDuration={3000}
-        sx={{ width: "90%" }}
       >
         <Alert
           severity="success"
