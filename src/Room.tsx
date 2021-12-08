@@ -1,6 +1,5 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import { Field, Form } from "react-final-form";
 import { useParams } from "react-router";
 import { useSearchParams } from "react-router-dom";
 import roomClient, { Message } from "./roomClient";
@@ -9,7 +8,7 @@ import uniq from "lodash/uniq";
 import mediaClient from "./mediaClient";
 import { Video, Audio } from "./Media";
 import { Chat } from "./Chat";
-import { AppBar, useTheme, Typography } from "@mui/material";
+import { AppBar, useTheme, Typography, Alert, Snackbar } from "@mui/material";
 import { capitalize } from "lodash";
 
 function useLocalStream() {
@@ -36,6 +35,7 @@ export function Room() {
   const room = searchParams.get("room");
 
   const [isConnected, setIsConnected] = useState(Boolean(roomClient._peer));
+  const [snackbarOpen, setSnackbarOpen] = useState(true);
 
   const onSendMessage = (text: string) => {
     console.log(text, "this is entering the chattttt");
@@ -160,6 +160,20 @@ export function Room() {
           </div>
         </div>
       </div>
+      <Snackbar
+        open={snackbarOpen}
+        onClose={() => setSnackbarOpen(false)}
+        autoHideDuration={6000}
+        sx={{ width: "90%" }}
+      >
+        <Alert
+          severity="success"
+          sx={{ width: "100%" }}
+          onClose={() => setSnackbarOpen(false)}
+        >
+          Share id copied to clipboard!
+        </Alert>
+      </Snackbar>
     </>
   );
 }
