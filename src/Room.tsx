@@ -88,8 +88,8 @@ export function Room() {
           <li>{roomClient._conn?.metadata.name}</li>
         </ul>
         <div>
-          {localStream && <Video stream={localStream} />}
-          {remoteStream && <Video stream={remoteStream} />}
+          {localStream && <Video isRemote={false} stream={localStream} />}
+          {remoteStream && <Video isRemote={true} stream={remoteStream} />}
           {remoteStream && <Audio stream={remoteStream} />}
         </div>
         <ul>
