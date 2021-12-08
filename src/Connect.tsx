@@ -31,10 +31,10 @@ function required(val: any) {
 }
 
 export function Connect() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const onSubmit = async ({ name }: IFormValues) => {
-    const user = localStorage.getItem("userName") ?? ""
+    const user = localStorage.getItem("userName") ?? "";
     const id = await roomClient.createRoom();
 
     if (user) {
