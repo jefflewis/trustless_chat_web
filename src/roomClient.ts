@@ -45,6 +45,8 @@ class RoomClient {
         console.log("Initialized Peer with brokering id", id);
         localStorage.setItem("roomId", id);
         resolve(id);
+
+        this._emitter.emit("created", this._conn);
       });
     });
   };
@@ -60,6 +62,8 @@ class RoomClient {
       peer: this._peer,
       connection: this._conn,
     });
+
+    this._emitter.emit("joined", this._conn);
   };
 
   _connectToPeer = async (
@@ -103,12 +107,12 @@ class RoomClient {
     });
   };
 
-  call = (mediaStream: MediaStream) => {
+  call = (mediaStream: MediaStream, options?: Peer.CallOption) => {
     if (!this._conn || !this._peer) {
       throw new Error("no connection for call");
     }
     console.log("CALLING", this._conn.peer);
-    const call = this._peer.call(this._conn.peer, mediaStream);
+    const call = this._peer.call(this._conn.peer, mediaStream, options);
     call.on("stream", this._receiveStream);
   };
 
@@ -116,7 +120,7 @@ class RoomClient {
     this._emitter.emit("STREAM", { mediaStream });
   };
 
-  subcribeToCalls = (subscribe: (call: Peer.MediaConnection) => void) => {
+  subscribeToCalls = (subscribe: (call: Peer.MediaConnection) => void) => {
     this._emitter.on("CALL", subscribe);
   };
 
@@ -125,6 +129,7 @@ class RoomClient {
   };
 
   answer = (call: Peer.MediaConnection, mediaStream: MediaStream) => {
+    console.log("answering", { call, mediaStream });
     call.answer(mediaStream);
   };
 
