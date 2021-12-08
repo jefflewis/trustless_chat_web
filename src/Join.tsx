@@ -49,7 +49,7 @@ export function Join() {
     console.log("connecting to room ", { roomId });
 
     if (!roomClient._peer) {
-      roomClient.joinRoom(roomId, { metadata: { name } });
+      roomClient.joinRoom(roomId, { metadata: { name, room } });
     }
 
     navigate(`/room/${roomId}/?room=${room}&user=${name}`);
