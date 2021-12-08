@@ -7,9 +7,11 @@ function buildVideoTransform(isRemote: boolean) {
 export function Video({
   stream,
   isRemote,
+  talking,
 }: {
   stream: MediaStream;
   isRemote: boolean;
+  talking?: boolean;
 }) {
   const ref = useRef<HTMLVideoElement | null>(null);
   const { palette } = useTheme();
@@ -24,26 +26,30 @@ export function Video({
   const avatarSize = "15rem";
 
   return (
-    <>
+    <div>
       <div
         style={{
           borderRadius: "50%",
           overflow: "hidden",
-          border: "4px solid",
-          borderColor: palette.primary.main,
+          border: `4px solid ${palette.primary.main}`,
           height: avatarSize,
           width: avatarSize,
-          position: "absolute",
+          animationName: "grow",
+          animationDuration: "2s",
+          animationIterationCount: "infinite",
+          animationTimingFunction: "ease-out",
+          animationFillMode: "forward",
+          animationPlayState: talking ? "initial" : "paused",
         }}
       >
         <div
           style={{
             height: "99%",
             width: "50",
-            border: "1px solid pink",
             position: "relative",
             top: 0,
             left: -90,
+            // animation: "avatar-shadow 1s infinite ease",
           }}
         >
           <video
@@ -56,7 +62,7 @@ export function Video({
           />
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

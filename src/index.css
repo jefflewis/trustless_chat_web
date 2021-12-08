@@ -123,3 +123,15 @@ button {
 .MuiAppBar-colorPrimary {
   background-color: #ffa31a !important;
 }
+
+@keyframes grow {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.07);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

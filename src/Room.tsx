@@ -94,6 +94,7 @@ export function Room() {
   }, [room, isConnected]);
 
   const isLocalTalking = useIsTalking(localStream);
+  const isRemoteTalking = useIsTalking(remoteStream);
 
   if (!user) {
     return null;
@@ -134,16 +135,29 @@ export function Room() {
             style={{
               flex: 1,
               display: "flex",
-              justifyContent: "center",
-
+              alignItems: "center",
               paddingTop: "4rem",
+              border: "solid 1px hotpink",
+              flexDirection: "column",
             }}
           >
             <div>
-              {localStream && <Video isRemote={false} stream={localStream} />}
+              {localStream && (
+                <Video
+                  talking={isLocalTalking}
+                  isRemote={false}
+                  stream={localStream}
+                />
+              )}
             </div>
-            <div style={{ paddingTop: "4rem" }}>
-              {remoteStream && <Video isRemote={true} stream={remoteStream} />}
+            <div style={{ marginTop: "4rem" }}>
+              {remoteStream && (
+                <Video
+                  talking={isRemoteTalking}
+                  isRemote={true}
+                  stream={remoteStream}
+                />
+              )}
             </div>
             {remoteStream && <Audio stream={remoteStream} />}
           </div>
