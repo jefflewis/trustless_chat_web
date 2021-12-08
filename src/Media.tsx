@@ -1,6 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useTheme } from "@mui/material";
+import React, {
+  DetailedHTMLProps,
+  useEffect,
+  useRef,
+  useState,
+  VideoHTMLAttributes,
+} from "react";
 import { useIsTalking } from "./audio";
+import { useTheme } from "@mui/material";
 import mediaClient from "./mediaClient";
 import roomClient from "./roomClient";
 
@@ -26,6 +32,10 @@ export function Media() {
   useEffect(() => {
     roomClient._emitter.on("joined", () => {
       roomClient.subscribeToStreams((remoteStream) => {
+        if (remoteStream.type !== "video") {
+          return;
+        }
+
         console.log("remote stream came in", remoteStream);
         setRemoteStream(remoteStream.mediaStream);
       });
@@ -108,12 +118,16 @@ function VideoAvatar({
 }
 
 export function Video({
-  stream,
   isRemote,
+  stream,
+  ...rest
 }: {
   stream: MediaStream;
   isRemote: boolean;
-}) {
+} & DetailedHTMLProps<
+  VideoHTMLAttributes<HTMLVideoElement>,
+  HTMLVideoElement
+>) {
   const ref = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
@@ -122,6 +136,7 @@ export function Video({
     }
     ref.current.srcObject = stream;
   }, []);
+
   return (
     <video
       style={{ transform: buildVideoTransform(isRemote) }}
@@ -130,6 +145,7 @@ export function Video({
       height="100%"
       autoPlay
       muted={!isRemote}
+      {...rest}
     />
   );
 }

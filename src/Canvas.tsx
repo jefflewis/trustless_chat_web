@@ -1,11 +1,9 @@
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Video } from "./Media";
 import roomClient from "./roomClient";
 
 export function Canvas() {
-  const [isConnected, setIsConnected] = useState(Boolean(roomClient._conn));
   const ref = useRef<HTMLCanvasElement>(null);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
 
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
@@ -22,7 +20,7 @@ export function Canvas() {
     });
 
     roomClient._emitter.on("joined", () => {
-      if (!ref?.current || !videoRef.current) {
+      if (!ref?.current) {
         return;
       }
 
@@ -32,25 +30,18 @@ export function Canvas() {
         metadata: { type: "canvas" },
       });
 
-      roomClient.subscribeToStreams((remoteStream) => {
-        if (
-          !ref?.current ||
-          !videoRef.current ||
-          remoteStream.type !== "canvas"
-        ) {
+      roomClient.subscribeToStreams((stream) => {
+        if (!ref?.current || stream.type !== "canvas") {
           return;
         }
 
-        console.log("remote stream came in", remoteStream);
-        if (!videoRef.current.srcObject) {
-          videoRef.current.srcObject = remoteStream.mediaStream;
-          setRemoteStream(remoteStream.mediaStream);
-        }
+        console.log("remote stream came in joined", stream);
+        setRemoteStream(stream.mediaStream);
       });
     });
 
     roomClient._emitter.on("created", () => {
-      if (!ref?.current || !videoRef.current) {
+      if (!ref?.current) {
         return;
       }
 
@@ -61,17 +52,15 @@ export function Canvas() {
       // });
 
       roomClient.subscribeToStreams((remoteStream) => {
-        if (
-          !ref?.current ||
-          !videoRef.current ||
-          remoteStream.type !== "canvas"
-        ) {
+        if (!ref?.current || remoteStream.type !== "canvas") {
           return;
         }
 
-        console.log("remote stream came in", remoteStream);
+        console.log("remote stream came in created", remoteStream);
         setRemoteStream(remoteStream.mediaStream);
-        videoRef.current.srcObject = ref.current.captureStream();
+        requestAnimationFrame(() => {
+          console.log("wtf");
+        });
       });
     });
   }, []);
@@ -127,16 +116,7 @@ export function Canvas() {
         height="300"
         style={{ backgroundColor: "white", border: "1px solid black" }}
       />
-      {/* {remoteStream && <Video isRemote stream={remoteStream} />} */}
-      <video
-        style={{
-          backgroundColor: "white",
-          border: "1px solid black",
-        }}
-        width="300"
-        height="300"
-        ref={videoRef}
-      />
+      {remoteStream && <Video isRemote stream={remoteStream} />}
     </div>
   );
 }
