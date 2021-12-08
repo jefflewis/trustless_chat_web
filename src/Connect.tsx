@@ -41,7 +41,9 @@ export function Connect() {
     const id = await roomClient.createRoom();
 
     navigator.clipboard.writeText(
-      encodeURI(`http://localhost:3000/join/${id}?room=${roomName}`)
+      encodeURI(
+        `https://trustless-chat.netlify.app/join/${id}?room=${roomName}`
+      )
     );
 
     if (user) {
