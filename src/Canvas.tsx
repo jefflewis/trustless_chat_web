@@ -96,6 +96,15 @@ export function Canvas() {
     setIsMouseDown(false);
   };
 
+  useEffect(() => {
+    const context = ref.current?.getContext("2d");
+    if (context) {
+      context.rect(0, 0, 300, 300);
+      context.fillStyle = "white";
+      context.fill();
+    }
+  }, []);
+
   return (
     <div
       style={{
@@ -114,9 +123,10 @@ export function Canvas() {
         id="canvas"
         width="300"
         height="300"
-        style={{ backgroundColor: "white", border: "1px solid black" }}
       />
-      {remoteStream && <Video isRemote stream={remoteStream} />}
+      {remoteStream && (
+        <Video width="300" height="300" isRemote stream={remoteStream} />
+      )}
     </div>
   );
 }
