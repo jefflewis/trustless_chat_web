@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/ca118337-f04b-40ff-bc5b-f847312e8a1b/deploy-status)](https://app.netlify.com/sites/trustless-chat/deploys)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

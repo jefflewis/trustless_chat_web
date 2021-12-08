@@ -33,7 +33,6 @@ const transformChatMessages = (
 };
 
 export function Chat({ messages, onSendMessage, user }: ChatProps) {
-  console.log(messages, "here");
   const [isOpen, setIsOpen] = useState(false);
   const [newMessagesCount, setNewMessagesCount] = useState(0);
 
@@ -47,7 +46,6 @@ export function Chat({ messages, onSendMessage, user }: ChatProps) {
     setIsOpen(!isOpen);
     setNewMessagesCount(0);
   };
-
   return (
     <div>
       <Launcher
