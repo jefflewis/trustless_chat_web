@@ -1,6 +1,9 @@
 import { useEffect, useRef } from 'react';
 
-export function Video({ stream }: { stream: MediaStream}) {
+function buildVideoTransform(isRemote: boolean) {
+  return `scale(${isRemote ? 1 : -1}, 1)`
+}
+export function Video({ stream, isRemote }: { stream: MediaStream, isRemote: boolean}) {
   const ref = useRef<HTMLVideoElement | null>(null)
   useEffect(() => {
     if (!ref.current) {
@@ -8,7 +11,8 @@ export function Video({ stream }: { stream: MediaStream}) {
     }
     ref.current.srcObject = stream
   }, [])
-  return <video ref={ref} height={400} width={400} autoPlay></video>
+
+  return <video style={{ transform: buildVideoTransform(isRemote) }} ref={ref} height={400} width={400} autoPlay></video>
 }
 
 export function Audio({ stream }: { stream: MediaStream}) {
