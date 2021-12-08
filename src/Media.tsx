@@ -1,3 +1,4 @@
+import { useTheme } from "@mui/material";
 import { useEffect, useRef } from "react";
 
 function buildVideoTransform(isRemote: boolean) {
@@ -11,6 +12,8 @@ export function Video({
   isRemote: boolean;
 }) {
   const ref = useRef<HTMLVideoElement | null>(null);
+  const { palette } = useTheme();
+
   useEffect(() => {
     if (!ref.current) {
       return;
@@ -18,15 +21,42 @@ export function Video({
     ref.current.srcObject = stream;
   }, []);
 
+  const avatarSize = "15rem";
+
   return (
-    <video
-      style={{ transform: buildVideoTransform(isRemote) }}
-      ref={ref}
-      height={400}
-      width={400}
-      autoPlay
-      muted={!isRemote}
-    ></video>
+    <>
+      <div
+        style={{
+          borderRadius: "50%",
+          overflow: "hidden",
+          border: "4px solid",
+          borderColor: palette.primary.main,
+          height: avatarSize,
+          width: avatarSize,
+          position: "absolute",
+        }}
+      >
+        <div
+          style={{
+            height: "99%",
+            width: "50",
+            border: "1px solid pink",
+            position: "relative",
+            top: 0,
+            left: -90,
+          }}
+        >
+          <video
+            style={{ transform: buildVideoTransform(isRemote) }}
+            ref={ref}
+            width="190%"
+            height="100%"
+            autoPlay
+            muted={!isRemote}
+          />
+        </div>
+      </div>
+    </>
   );
 }
 
