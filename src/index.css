@@ -11,3 +11,44 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.primary {
+  background-color: #ffa31a;
+}
+
+.secondary {
+  background-color:  #808080;
+}
+
+.background {
+  background-color: #1b1b1b;
+}
+
+.background-secondary {
+  background-color: #292929;  
+}
+
+div {
+  color: #ffffff
+}
+
+body {
+  background-color: #1b1b1b;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  width: 100vw;
+  height: 100vh
+}
+
+button {
+  font-size: 1rem;
+  border-radius: 4px;
+  box-shadow: none;
+  border: none;
+  margin: 4px;
+  padding: 10px;
+  cursor: pointer;
+}
