@@ -5,6 +5,9 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 
 import './index.css';
+import roomClient from './room'
+
+roomClient.createRoom()
 
 ReactDOM.render(
   <React.StrictMode>
